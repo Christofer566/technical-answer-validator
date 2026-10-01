@@ -1,0 +1,8 @@
+# Merge this server block into the user's Codex MCP configuration.
+# Replace the absolute path for the machine where the server is installed.
+
+[mcp_servers.technical_answer_validator]
+command = "C:/absolute/path/technical-answer-validator/.venv/Scripts/python.exe"
+args = ["C:/absolute/path/technical-answer-validator/mcp_server.py"]
+startup_timeout_sec = 30
+tool_timeout_sec = 30

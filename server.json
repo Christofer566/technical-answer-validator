@@ -1,0 +1,20 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.christofer566/technical-answer-validator",
+  "title": "Technical Answer Validator",
+  "description": "Deterministic rubric-based technical answer feedback for AI agents; review required, not an official grade.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/Christofer566/technical-answer-validator",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "technical-answer-validator",
+      "version": "0.1.0",
+      "transport": { "type": "stdio" }
+    }
+  ]
+}

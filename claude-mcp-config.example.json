@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "technical-answer-validator": {
+      "command": "C:\\absolute\\path\\technical-answer-validator\\.venv\\Scripts\\python.exe",
+      "args": ["C:\\absolute\\path\\technical-answer-validator\\mcp_server.py"]
+    }
+  }
+}

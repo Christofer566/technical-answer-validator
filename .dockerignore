@@ -1,0 +1,8 @@
+.git
+.venv
+.uv-cache
+__pycache__
+tests
+.env
+*.db
+*.sqlite*

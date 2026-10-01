@@ -1,0 +1,137 @@
+openapi: 3.1.0
+info:
+  title: Technical Answer Validator API
+  version: 0.1.0
+  description: Deterministic, rubric-based assistive review for AI agents. Not an official exam grade.
+servers:
+  - url: http://127.0.0.1:8080
+    description: Local development only; production must use HTTPS.
+security:
+  - bearerAuth: []
+paths:
+  /healthz:
+    get:
+      security: []
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+  /v1/evaluate:
+    post:
+      summary: Evaluate one answer against a caller-supplied rubric
+      operationId: evaluateAnswer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluationRequest"
+            example:
+              rubric:
+                required_concepts: [isolation, lockout tag]
+                accepted_synonyms:
+                  isolation: [energy isolation]
+                numeric_requirements: []
+                required_count: 2
+              answer: Apply energy isolation and attach a lockout tag.
+      responses:
+        "200":
+          description: Evaluation result; review is always required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationResult"
+        "400":
+          $ref: "#/components/responses/ClientError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          description: Body exceeds 64 KiB
+        "415":
+          description: Content-Type must be application/json
+        "429":
+          description: Per-client request limit exceeded
+  /v1/usage:
+    get:
+      summary: Read this API key's UTC daily aggregate usage
+      operationId: getUsage
+      responses:
+        "200":
+          description: Aggregated counters; answer content is never included
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  date_utc: {type: string, format: date}
+                  requests: {type: integer}
+                  successful: {type: integer}
+                  client_errors: {type: integer}
+                  rate_limited: {type: integer}
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
+  schemas:
+    NumericRequirement:
+      type: object
+      additionalProperties: false
+      required: [value]
+      properties:
+        value: {type: [string, number]}
+        unit: {type: string, maxLength: 24}
+        tolerance: {type: [string, number], default: 0}
+    Rubric:
+      type: object
+      additionalProperties: false
+      required: [required_concepts]
+      properties:
+        required_concepts:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items: {type: string, minLength: 1, maxLength: 120}
+        accepted_synonyms:
+          type: object
+          additionalProperties:
+            type: array
+            maxItems: 20
+            items: {type: string, minLength: 1, maxLength: 120}
+        numeric_requirements:
+          type: array
+          maxItems: 20
+          items: {$ref: "#/components/schemas/NumericRequirement"}
+        required_count:
+          type: integer
+          minimum: 1
+          maximum: 50
+    EvaluationRequest:
+      type: object
+      additionalProperties: false
+      required: [rubric, answer]
+      properties:
+        rubric: {$ref: "#/components/schemas/Rubric"}
+        answer: {type: string, minLength: 1, maxLength: 8000}
+    EvaluationResult:
+      type: object
+      required: [api_version, status, score, verdict, matched_concepts, missing_concepts, numeric_checks, review_required, limitations]
+      properties:
+        api_version: {const: v1}
+        status: {const: graded}
+        score: {type: number, minimum: 0, maximum: 1}
+        verdict: {enum: [correct, partial, wrong]}
+        matched_concepts: {type: array, items: {type: string}}
+        missing_concepts: {type: array, items: {type: string}}
+        numeric_checks: {type: array, items: {type: object}}
+        notes: {type: array, items: {type: string}}
+        review_required: {const: true}
+        limitations: {type: array, items: {type: string}}
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer API key
+    ClientError:
+      description: Invalid request JSON or rubric
