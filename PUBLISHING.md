@@ -5,9 +5,9 @@ The package contains two delivery paths: local MCP stdio for an agent that can s
 ## Local MCP package
 
 1. MIT was selected and is included in `LICENSE` and the Python package metadata. Confirm that all included source/assets are eligible for MIT before public release.
-2. Create the GitHub repository at the URL in `server.json`; review every source/config file and exclude `.venv`, `.uv-cache`, `.env`, usage databases, and generated state.
+2. The public GitHub repository exists at `https://github.com/Christofer566/technical-answer-validator`; source is on `main`. Keep `.venv`, `.uv-cache`, `.env`, usage databases, and generated state out of commits.
 3. Build and inspect the wheel/sdist: `uv build`; test the wheel in a clean virtual environment; `uv run python -m unittest discover -s tests -v`.
-4. PyPI lookup for `technical-answer-validator` returned HTTP 404 on 2026-10-01 (no project currently returned; recheck immediately before release). Register the actual GitHub repository and `.github/workflows/publish-pypi.yml` as PyPI Trusted Publisher; create the matching `pypi` GitHub environment. Publish version `0.1.0` by pushing a `v0.1.0` tag only after ownership/IP approval.
+4. PyPI JSON lookup returned HTTP 404 on 2026-10-02. In the PyPI account, register a pending GitHub Actions Trusted Publisher for project `technical-answer-validator`, owner `Christofer566`, repository `technical-answer-validator`, workflow `.github/workflows/publish-pypi.yml`, environment `pypi`. The GitHub `pypi` environment already exists. Publish version `0.1.0` by pushing a `v0.1.0` tag only after ownership/IP approval.
 5. Confirm the built PyPI README contains the exact `mcp-name` marker and that package metadata, repository URL, license, and author are correct.
 6. Validate `server.json` against the current MCP Registry schema and verify the GitHub/PyPI namespace, package name, and version. Then publish with the official MCP Registry CLI using the owner's GitHub identity.
 7. Test installation from the published package in a clean environment with `uvx --from technical-answer-validator tav-mcp`; connect it in target agent hosts and call `evaluate_answer`.
@@ -22,9 +22,10 @@ The package contains two delivery paths: local MCP stdio for an agent that can s
 
 ## Blocks that require owner-controlled decisions/actions
 
-- Public source repository does not yet exist; `server.json` repository URL and namespaced server ID are provisional.
-- PyPI name availability, PyPI account ownership, Trusted Publisher setup, and upload have not been confirmed.
+- Public source repository exists and `server.json` points to it.
+- PyPI name was not registered at the 2026-10-02 lookup (HTTP 404). PyPI account authentication is required to register its pending publisher; no package has been uploaded.
 - MIT is selected. The owner must still confirm project ownership and third-party rights for included files before publication.
 - No production URL, host account, budget, or service operator contact has been supplied; therefore the container remains local and has not been deployed.
 - The tool's keyword/numeric decisions are not validated against independent subject-matter gold data. Position it as assistive agent feedback, not a trustworthy final grader.
+
 
