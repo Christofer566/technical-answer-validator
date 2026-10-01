@@ -2,9 +2,10 @@
 requires = ["hatchling>=1.27,<2"]
 build-backend = "hatchling.build"
 
+
 [project]
 name = "technical-answer-validator"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP and REST tools for deterministic rubric-based technical answer review"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,17 +13,21 @@ license = "MIT"
 license-files = ["LICENSE"]
 dependencies = ["mcp==2.2.0"]
 
+
 [project.scripts]
 tav-mcp = "mcp_server:main"
 tav-api = "tav_api:main"
 
+
 [tool.hatch.build.targets.wheel]
 only-include = ["mcp_server.py", "tav_core.py", "tav_api.py"]
+
 
 [tool.hatch.build.targets.wheel.force-include]
 "mcp_server.py" = "mcp_server.py"
 "tav_core.py" = "tav_core.py"
 "tav_api.py" = "tav_api.py"
+
 
 [tool.hatch.build.targets.sdist]
 only-include = [
@@ -33,5 +38,5 @@ only-include = [
   "tav_api.py", "tav_core.py", "uv.lock", ".github", "scripts", "tests"
 ]
 
+
 [tool.pytest.ini_options]
-testpaths = ["tests"]
