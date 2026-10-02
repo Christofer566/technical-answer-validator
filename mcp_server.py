@@ -9,6 +9,7 @@ from typing import Any
 from mcp.server import MCPServer
 
 from tav_core import RequestError, evaluate
+from tav_analytics import record_call
 
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(message)s")
 mcp = MCPServer(
@@ -31,10 +32,16 @@ def evaluate_answer(rubric: dict[str, Any], answer: str) -> dict[str, Any]:
     an official exam grade.
     """
     try:
-        return evaluate({"rubric": rubric, "answer": answer})
+        result = evaluate({"rubric": rubric, "answer": answer})
+        record_call("success")
+        return result
     except RequestError as exc:
+        record_call("invalid_request")
         # Return a structured error result so the agent can repair its inputs.
         return {"status": "invalid_request", "error": str(exc), "review_required": True}
+    except Exception:
+        record_call("error")
+        raise
 
 
 def main() -> None:
