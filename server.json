@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Christofer566/technical-answer-validator",
   "title": "Technical Answer Validator",
-  "description": "Deterministic rubric-based technical answer feedback for AI agents; review required, not an official grade.",
+  "description": "Rubric-based technical answer feedback for AI agents; human review required.",
   "version": "0.1.2",
   "repository": {
     "url": "https://github.com/Christofer566/technical-answer-validator",
@@ -18,4 +18,3 @@
     }
   ]
 }
-
